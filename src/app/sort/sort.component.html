@@ -1,0 +1,13 @@
+
+<div *ngIf="finishFlag != 1" id="quizWrapper">
+    <p id="battleNumber">sort works!</p>
+
+    <progress id="progressBar" max="100" [value]="progress"></progress>
+    <div id="buttonWrapper">
+        <button id="leftField" class="optionBtn" (click)="sortList(-1)"></button>
+        <button id="neutralField" class="optionBtn" (click)="sortList(0)">I'm Neutral</button>
+        <button id="rightField" class="optionBtn" (click)="sortList(1)"></button>
+    </div>
+</div>
+<div id="resultField"></div>
+<div id="albumResults"></div>

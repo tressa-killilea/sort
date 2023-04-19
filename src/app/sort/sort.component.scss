@@ -1,0 +1,45 @@
+#buttonWrapper{
+    width: 100%;
+    display:flex;
+    justify-content: space-around;
+}
+
+#quizWrapper{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.optionBtn{
+    min-width: 200px;
+    width: 200px;
+    height: 200px;
+    font-size: 25px;
+    color: white;
+    background-color: hsl(75, 10%, 40%);
+    border-radius: 10px;
+    text-align: center;
+    overflow: wrap;
+    letter-spacing: 2px;
+    padding: 8px;
+    font-family: "Goudy Old Style", Garamond, "Big Caslon", "Times New Roman", serif;
+
+    &:hover{
+        background-color: #B7B7A4;
+        border-color: #6B705C;
+    }
+}
+
+#battleNumber{
+    font-size: 20px;
+    font-family: "Verdana";
+    text-align: center;
+}
+
+#progressBar{
+    width: 80%;
+    height: 40px;
+    margin-bottom: 30px;
+    background-color: white;
+}
