@@ -1,13 +1,26 @@
 
 <div *ngIf="finishFlag != 1" id="quizWrapper">
-    <p id="battleNumber">sort works!</p>
+    <p id="battleNumber"></p>
 
-    <progress id="progressBar" max="100" [value]="progress"></progress>
+    <div id="progressTracker">
+        <p><ngb-progressbar type="success" textType="dark" [value]="progress" [showValue]="false"></ngb-progressbar></p>
+        <p id="progressId">{{progress}}%</p>
+    </div>
+
     <div id="buttonWrapper">
         <button id="leftField" class="optionBtn" (click)="sortList(-1)"></button>
         <button id="neutralField" class="optionBtn" (click)="sortList(0)">I'm Neutral</button>
         <button id="rightField" class="optionBtn" (click)="sortList(1)"></button>
     </div>
+
+    <div id="playerWrapper">
+        <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/19GDzR3zE3TekzL8FwmPUy?utm_source=generator" width="400px" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/28IEbk5a7twNTbUEvWslUb?utm_source=generator" width="400px" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    </div>
 </div>
 <div id="resultField"></div>
 <div id="albumResults"></div>
+<div id="chartWrapper" >
+    <canvas id="albumChart" width="200px"></canvas>
+</div>
+

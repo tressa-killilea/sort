@@ -1,7 +1,7 @@
 #buttonWrapper{
     width: 100%;
     display:flex;
-    justify-content: space-around;
+    justify-content: center;
 }
 
 #quizWrapper{
@@ -23,6 +23,7 @@
     overflow: wrap;
     letter-spacing: 2px;
     padding: 8px;
+    margin: 0px 20px;
     font-family: "Goudy Old Style", Garamond, "Big Caslon", "Times New Roman", serif;
 
     &:hover{
@@ -35,11 +36,40 @@
     font-size: 20px;
     font-family: "Verdana";
     text-align: center;
+    margin-top: 10px;
 }
 
-#progressBar{
-    width: 80%;
-    height: 40px;
-    margin-bottom: 30px;
-    background-color: white;
+
+::ng-deep .progress {
+    background-color: #FFE8D6 !important;
+    width: 500px !important;
+    border: 1px #6B705C solid;
+    color: blue !important;
+}
+::ng-deep .progress-bar {
+    background-color: #CB997E !important;
+}
+
+#progressTracker{
+    display: flex;
+}
+#progressId{
+    margin-left: 7px;
+    margin-top: -5px;
+}
+
+#chartWrapper{
+    width: 650px;
+
+    padding: 15px;
+
+}
+
+#playerWrapper{
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+}
+iframe{
+    margin: 70px;
 }

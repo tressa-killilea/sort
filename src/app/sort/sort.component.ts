@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, Input } from '@angular/core';
+import Chart, { ChartItem, Colors } from 'chart.js/auto';
 import * as songData from 'src/assets/songList.json';
 import * as testData from 'src/assets/testList.json';
 
@@ -11,6 +12,14 @@ type AlbumObj = {
   title: string;
   points: number;
   trackTotal: number;
+}
+
+
+type GraphModel = {
+  value:number;
+  color:string;
+  size:string;
+  legend:string;
 }
 
 @Component({
@@ -38,6 +47,8 @@ export class SortComponent implements AfterViewInit{
   totalSize = 0;
   finishSize = 0;
   finishFlag = 0;
+
+  albumAry:AlbumObj[] = [];
 
   tempObj:object[] = [];
 
@@ -195,7 +206,7 @@ export class SortComponent implements AfterViewInit{
     }
 
     if(this.cmp1 < 0) {
-      str = "Battle #"+(this.numQuestion-1)+"<br>"+Math.floor(this.finishSize*100/this.totalSize)+"% sorted.";
+      str = "Battle #"+(this.numQuestion-1);
       const el = document.getElementById("battleNumber");
       if(el != null) el.innerHTML = str;
       this.showResult();
@@ -215,7 +226,7 @@ export class SortComponent implements AfterViewInit{
   }
 
   showImage(){
-    var str0 = "Battle #"+(this.numQuestion-1)+"<br>"+Math.floor(this.finishSize*100/this.totalSize)+"% sorted.";
+    var str0 = "Battle #"+(this.numQuestion-1);
     var str1 = ""+this.getSongName(this.lstMember[this.cmp1][this.head1]);
     var str2 = ""+this.getSongName(this.lstMember[this.cmp2][this.head2]);
     this.progress = Math.floor(this.finishSize*100/this.totalSize)
@@ -304,6 +315,8 @@ export class SortComponent implements AfterViewInit{
     var str = "";
     var totalPoints = (list.length - 1) * list.length / 2;
     const resultEl = document.getElementById("albumResults");
+    var chartColors:string[] = [];
+    var chartPoints:number[] = [];
 
     for(var i=0; i < albumTitles.length; i++){
       albumsObj[i] = {
@@ -322,18 +335,63 @@ export class SortComponent implements AfterViewInit{
       albumsObj[tempIndex].trackTotal++;
     }
 
-    // build albums table
-    str += "<table style=\"width:200px; font-size:18px; line-height:120%; margin-left:auto; margin-right:auto; border:1px solid #000; border-collapse:collapse\" align=\"center\">";
-    str += "<tr><td style=\"color:#ffffff; background-color:#000; text-align:center;\">Rank<\/td><td style=\"color:#ffffff; background-color:#000; text-align:center;\">Song<\/td><\/tr>";
+    albumsObj.forEach((album)=>{
+      var t = album.title;
+      if(t == "Debut") chartColors.push("#8ac6eb");
+      else if(t == "Fearless") chartColors.push("#9c643d");
+      else if(t == "Speak Now") chartColors.push("#712485");
+      else if(t == "Red") chartColors.push("#c71625");
+      else if(t == "1989") chartColors.push("#537aad");
+      else if(t == "Reputation") chartColors.push("#000");
+      else if(t == "Lover") chartColors.push("#e67ec8");
+      else if(t == "folklore") chartColors.push("#827f81");
+      else if(t == "evermore") chartColors.push("#57091d");
+      else if(t == "Midnights") chartColors.push("#28285e");
+      else if(t == "Other") chartColors.push("#a3972a");
+    });
 
     for(var i=0; i < albumsObj.length; i++){
       var points = (totalPoints - albumsObj[i].points) * (albumsObj[i].trackTotal / list.length);
-      str += "<tr><td style=\"border:1px solid #000; text-align:center; padding-right:5px;\">"+albumsObj[i].title+"<\/td><td style=\"border:1px solid #000; padding-left:5px;\">"+points+"<\/td><\/tr>";
+      chartPoints.push(points);
     }
-
-    str += "<\/table>";
-
-    if(resultEl) resultEl.innerHTML = str;
+    
+    var chart = document.getElementById("albumChart") as ChartItem;
+    var albumChart = new Chart(chart, {
+      type: 'bar',
+      data:{
+        labels: albumTitles,
+        datasets: [{
+          label: '',
+          data: chartPoints,
+          backgroundColor: chartColors,
+          maxBarThickness: 20,
+        }]
+      },
+      options: {
+        indexAxis: "y",
+        scales: {
+          x: {
+            grid: {
+              display: false
+            },
+            ticks: {
+              display: false
+            },
+            
+          },
+          y: {
+            grid: {
+              display: false
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          }
+        }
+      }
+    });
   }
 
 }
