@@ -1,2 +1,5 @@
-<app-sort></app-sort>
+<div class="intro">
+    <p>Welcome to my song ranker! First, choose to rank Taylor Swift's discography, or you can choose your own Spotify playlist. Once you are on the ranking page, be sure that you don't go back or refresh the page. <strong>You will lose all your progress.</strong> Choose your favorite of the two songs displayed and try not to choose the neutral option too often, or your ranking won't be as accurate. Happy ranking!</p>
+</div>
+<playlist-form (playlistID)="getPlaylistId($event)"></playlist-form>
 <router-outlet></router-outlet>

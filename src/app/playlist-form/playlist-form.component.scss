@@ -1,0 +1,42 @@
+.btn {
+    width: 150px;
+    padding: 10px 0px;
+    background-color: #CB997E;
+    border: 2px solid #75523f;
+    margin: 0px 20px;
+
+    &:hover{
+        background-color: #DDBEA9;
+    }
+}
+.centerChildren{
+    display: flex;
+    justify-content: center;
+}
+
+.text {
+    font-family: "Goudy Old Style", Garamond, "Big Caslon", "Times New Roman", serif;
+    font-size: 30px;
+    margin: 30px;
+    color: #75523f;
+    display: flex;
+    justify-content: center;
+}
+
+input[type=text]{
+    padding: 10px;
+    border: 2px solid #75523f; 
+    background-color: #faece1;
+    border-radius: 10px;
+    width: 400px;
+}
+
+.errorText{
+    font-size: 20px;
+    color: red;
+}
+.error{
+    display:flex;
+    align-items: center;
+    flex-direction: column;
+}

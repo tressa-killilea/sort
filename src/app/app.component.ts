@@ -7,6 +7,9 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'songSort';
+  id = '';
 
-  
+  getPlaylistId(id: string){
+    this.id = id;
+  }
 }

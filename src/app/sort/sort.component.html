@@ -8,19 +8,26 @@
     </div>
 
     <div id="buttonWrapper">
-        <button id="leftField" class="optionBtn" (click)="sortList(-1)"></button>
+        <iframe *ngIf="showPlayers" id="left-player" style="border-radius:12px" [src]="leftSongId | safe" width="170px" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        <button id="leftField" class="optionBtn" (click)="sortList(-1)">
+            <div class="spinner-border text-light" role="status">
+                <span class="sr-only"></span>
+            </div>
+        </button>
         <button id="neutralField" class="optionBtn" (click)="sortList(0)">I'm Neutral</button>
-        <button id="rightField" class="optionBtn" (click)="sortList(1)"></button>
+        <button id="rightField" class="optionBtn" (click)="sortList(1)">
+            <div class="spinner-border text-light" role="status">
+                <span class="sr-only"></span>
+            </div>
+        </button>
+        <iframe *ngIf="showPlayers" id="right-player" style="border-radius:12px" [src]="rightSongId | safe" width="170px" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
     </div>
-
-    <div id="playerWrapper">
-        <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/19GDzR3zE3TekzL8FwmPUy?utm_source=generator" width="400px" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-        <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/28IEbk5a7twNTbUEvWslUb?utm_source=generator" width="400px" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-    </div>
+    <button id="togglePlayers" (click)="toggleMusicPlayers()">Toggle Music Players</button>
 </div>
-<div id="resultField"></div>
-<div id="albumResults"></div>
-<div id="chartWrapper" >
-    <canvas id="albumChart" width="200px"></canvas>
+<div class="resultWrapper">
+    <div id="resultField"></div>
+    <div id="chartWrapper" *ngIf="isTSplaylist">
+        <canvas id="albumChart" width="200px"></canvas>
+    </div>
 </div>
 

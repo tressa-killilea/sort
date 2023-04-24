@@ -1,11 +1,16 @@
-import { AfterViewInit, Component, Input } from '@angular/core';
+import { AfterViewInit, Component, Injectable, Input } from '@angular/core';
 import Chart, { ChartItem, Colors } from 'chart.js/auto';
-import * as songData from 'src/assets/songList.json';
-import * as testData from 'src/assets/testList.json';
+import { HttpClientModule, HttpHeaders } from '@angular/common/http';
+import {GetToken} from '../services/getToken.service';
+import { Songs } from '../services/songs.service';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { Location } from '@angular/common';
+import { NgxSpinnerService } from "ngx-spinner";  
 
 type SongObj = {
   title: string;
   album: string;
+  id: string;
 };
 
 type AlbumObj = {
@@ -13,7 +18,6 @@ type AlbumObj = {
   points: number;
   trackTotal: number;
 }
-
 
 type GraphModel = {
   value:number;
@@ -25,11 +29,13 @@ type GraphModel = {
 @Component({
   selector: 'app-sort',
   templateUrl: './sort.component.html',
-  styleUrls: ['./sort.component.scss']
+  styleUrls: ['./sort.component.scss'],
+  providers:[GetToken, Songs]
 })
 export class SortComponent implements AfterViewInit{
   @Input() listType:string = "song";
-  dataList:SongObj[] = testData;
+  @Input() playlistId: string = '';
+  dataList:SongObj[] = [];
 
   lstMember:number[][] = []
   parent:number[] = [];
@@ -48,23 +54,122 @@ export class SortComponent implements AfterViewInit{
   finishSize = 0;
   finishFlag = 0;
 
+  leftSongId = '';
+  rightSongId = '';
+
   albumAry:AlbumObj[] = [];
 
   tempObj:object[] = [];
 
+  token:any = {};
+  playlist:any = {};
+  routeState:any = {};
+  isTSplaylist: boolean = true;
+
+  toggleBtnTxt = "Hide Music Players";
+  showPlayers = true;
+
   ngAfterViewInit(){
-    this.showImage();
+   // this.showImage();
   }
 
-  constructor(){
-    this.initList();
+  ngOnInit() {
+    this.routeState = this.location.getState();
+    this.playlistId = this.routeState.id;
+  }
+
+  constructor(private getToken: GetToken, 
+    private songService: Songs, 
+    private location: Location){
+
+    this.getTokenService();
+
+    this.isTSplaylist = this.playlistId === "5IZAevyO1lpExvoXitoZmU";
+  }
+
+  // async getTokenService(){
+  //   await this.getToken.sendPostRequest().subscribe((token: object) => (this.token = token));
+  // }
+  getTokenService(){
+      this.getToken.sendPostRequest().subscribe((token: any) => {
+        this.token = token;
+        this.getPlaylistService('', this.playlistId);
+      });
+  }
+
+  getPlaylistService(url: string = '', playlistId: string){
+    var temp:SongObj[] = [];
+    this.songService.getPlaylist(this.token.access_token, url, playlistId).subscribe((playlist: any) => {
+
+      this.playlist = playlist;
+      this.getData();
+
+      if(playlist.body.next != null){
+        this.getPlaylistService(playlist.body.next, playlistId);
+      } else {
+        this.initList();
+        this.showImage();
+      }
+    });
+  }
+
+  cleanAlbumTitleTS(t: string){
+    var title = "";
+    if(t == "Taylor Swift") {
+      title = "Debut"
+    }
+    else if(t.includes("Fearless")) {
+      title = "Fearless";
+    }
+    else if(t.includes("Speak Now")) {
+      title = "Speak Now";
+    }
+    else if(t.includes("Red")) {
+      title = "Red";
+    }
+    else if(t.includes("1989")) {
+      title = "1989";
+    }
+    else if(t.includes("reputation")) {
+      title = "reputation";
+    }
+    else if(t.includes("Lover")) {
+      title = "Lover";
+    }
+    else if(t.includes("folklore")) {
+      title = "folklore";
+    }
+    else if(t.includes("evermore")) {
+      title = "evermore";
+    }
+    else if(t.includes("Midnights")) {
+      title = "Midnights";
+    }
+    else {
+      title = "Other"
+    }
+    return title;
+  }
+
+  getData(){
+    var temp:SongObj[] = [];
+    var tempObj:SongObj = {title: "", album: "", id: ""};
+    for(var i=0; i<this.playlist.body.items.length; i++){
+      tempObj.title= this.playlist.body.items[i].track.name;
+      if(this.isTSplaylist) tempObj.album= this.cleanAlbumTitleTS(this.playlist.body.items[i].track.album.name);
+      else tempObj.album=this.playlist.body.items[i].track.album.name;
+      tempObj.id= this.playlist.body.items[i].track.id;
+
+      temp.push(tempObj);
+      tempObj = {title: "", album: "", id: ""};
+    }
+    this.dataList.push(...temp);
   }
 
   initList(){
     var n = 0;
     var mid = 0;
     var i = 0;
-
     this.lstMember[n] = [];
     for( i=0; i<this.dataList.length; i++){
       this.lstMember[n][i] = i;
@@ -214,25 +319,34 @@ export class SortComponent implements AfterViewInit{
     } else {
       this.showImage();
     }
-    console.log(this.lstMember);
   }
 
   fitFont(){
     var leftField = document.getElementById('leftField');
     var neutralField = document.getElementById('neutralField');
     var rightField = document.getElementById('rightField');
+  }
 
-    
+  getEmbedSrc(id: string) {
+    return "https://open.spotify.com/embed/track/"+id+"?utm_source=generator";
   }
 
   showImage(){
+    const obj1 = this.getSongObj(this.lstMember[this.cmp1][this.head1]);
+    const obj2 = this.getSongObj(this.lstMember[this.cmp2][this.head2]);
+
     var str0 = "Battle #"+(this.numQuestion-1);
-    var str1 = ""+this.getSongName(this.lstMember[this.cmp1][this.head1]);
-    var str2 = ""+this.getSongName(this.lstMember[this.cmp2][this.head2]);
+    var str1 = obj1.title;
+    var str2 = obj2.title;
+
     this.progress = Math.floor(this.finishSize*100/this.totalSize)
     const battleEl = document.getElementById("battleNumber");
+
     if(battleEl) battleEl.innerHTML = str0;
     const leftEl = document.getElementById("leftField");
+    this.leftSongId = this.getEmbedSrc(obj1.id);
+    this.rightSongId = this.getEmbedSrc(obj2.id);
+
     if(leftEl) {
       leftEl.innerHTML = str1;
       if(str1.length > 25){
@@ -247,8 +361,6 @@ export class SortComponent implements AfterViewInit{
       } else rightEl.style.fontSize = "25px;"
     }
     this.numQuestion ++;
-    
-    
   }
 
   getSongName(n: number){
@@ -266,8 +378,8 @@ export class SortComponent implements AfterViewInit{
     var i:number;
     const resultEl = document.getElementById("resultField");
 
-    str += "<table style=\"width:200px; font-size:18px; line-height:120%; margin-left:auto; margin-right:auto; border:1px solid #000; border-collapse:collapse\" align=\"center\">";
-    str += "<tr><td style=\"color:#ffffff; background-color:#000; text-align:center;\">Album<\/td><td style=\"color:#ffffff; background-color:#000; text-align:center;\">Points<\/td><\/tr>";
+    str += "<table style=\"width:350px; font-size:18px; line-height:120%; margin-left:auto; margin-right:auto; border:1px solid #000; border-collapse:collapse\" align=\"center\">";
+    str += "<tr><td style=\"color:#ffffff; background-color:#6B705C; font-family: Goudy Old Style ;text-align:center;\">Rank<\/td><td style=\"color:#ffffff; background-color:#000; background-color:#6B705C; font-family: Goudy Old Style; text-align:center;\">Song<\/td><\/tr>";
 
     for(i=0; i<this.dataList.length; i++){
       str += "<tr><td style=\"border:1px solid #000; text-align:center; padding-right:5px;\">"+ranking+"<\/td><td style=\"border:1px solid #000; padding-left:5px;\">"+this.dataList[this.lstMember[0][i]].title+"<\/td><\/tr>";
@@ -282,7 +394,7 @@ export class SortComponent implements AfterViewInit{
     }
     str += "<\/table>";
     if(resultEl) resultEl.innerHTML = str;
-    this.showAlbumResult();
+    if(this.isTSplaylist) this.showAlbumResult();
   }
 
   findAlbumIndex(albumTitle: string, albums: AlbumObj[]){
@@ -295,6 +407,7 @@ export class SortComponent implements AfterViewInit{
   getAlbumList(){
     var albumList:string[] = [];
     var isFound = false;
+
     for(var i=0; i<this.dataList.length; i++){
       for(var j=0; j<albumList.length; j++){
         if(this.dataList[i].album === albumList[j]) isFound = true;
@@ -302,7 +415,6 @@ export class SortComponent implements AfterViewInit{
       if(!isFound) albumList.push(this.dataList[i].album);
       isFound = false;
     }
-
     return albumList;
   }
 
@@ -314,10 +426,10 @@ export class SortComponent implements AfterViewInit{
     var tempIndex;
     var str = "";
     var totalPoints = (list.length - 1) * list.length / 2;
-    const resultEl = document.getElementById("albumResults");
     var chartColors:string[] = [];
     var chartPoints:number[] = [];
 
+    // Instatiate albumsObj
     for(var i=0; i < albumTitles.length; i++){
       albumsObj[i] = {
         title: albumTitles[i],
@@ -325,11 +437,9 @@ export class SortComponent implements AfterViewInit{
         trackTotal: 0
       }
     }
-  
+   // 
     for(var j=0; j < list.length; j++){
-     
       tempSongObj = this.getSongObj(list[j]);
-      
       tempIndex = this.findAlbumIndex(tempSongObj.album, albumsObj);
       albumsObj[tempIndex].points += j;
       albumsObj[tempIndex].trackTotal++;
@@ -337,24 +447,46 @@ export class SortComponent implements AfterViewInit{
 
     albumsObj.forEach((album)=>{
       var t = album.title;
-      if(t == "Debut") chartColors.push("#8ac6eb");
-      else if(t == "Fearless") chartColors.push("#9c643d");
-      else if(t == "Speak Now") chartColors.push("#712485");
-      else if(t == "Red") chartColors.push("#c71625");
-      else if(t == "1989") chartColors.push("#537aad");
-      else if(t == "Reputation") chartColors.push("#000");
-      else if(t == "Lover") chartColors.push("#e67ec8");
-      else if(t == "folklore") chartColors.push("#827f81");
-      else if(t == "evermore") chartColors.push("#57091d");
-      else if(t == "Midnights") chartColors.push("#28285e");
-      else if(t == "Other") chartColors.push("#a3972a");
+      if(t == "Debut") {
+        chartColors.push("#8ac6eb");
+      }
+      else if(t.includes("Fearless")) {
+        chartColors.push("#9c643d");
+      }
+      else if(t.includes("Speak Now")) {
+        chartColors.push("#712485");
+      }
+      else if(t.includes("Red")) {
+        chartColors.push("#c71625");
+      }
+      else if(t.includes("1989")) {
+        chartColors.push("#537aad");
+      }
+      else if(t.includes("reputation")) {
+        chartColors.push("#000");
+      }
+      else if(t.includes("Lover")) {
+        chartColors.push("#e67ec8");
+      }
+      else if(t.includes("folklore")) {
+        chartColors.push("#827f81");
+      }
+      else if(t.includes("evermore")) {
+        chartColors.push("#57091d");
+      }
+      else if(t.includes("Midnights")) {
+        chartColors.push("#28285e");
+      }
+      else {
+        chartColors.push("#a3972a");
+      }
     });
 
     for(var i=0; i < albumsObj.length; i++){
       var points = (totalPoints - albumsObj[i].points) * (albumsObj[i].trackTotal / list.length);
       chartPoints.push(points);
     }
-    
+
     var chart = document.getElementById("albumChart") as ChartItem;
     var albumChart = new Chart(chart, {
       type: 'bar',
@@ -392,6 +524,12 @@ export class SortComponent implements AfterViewInit{
         }
       }
     });
+  }
+
+  toggleMusicPlayers(){
+    // const leftPlayer = document.getElementById("left-player");
+    // const rightPlayer = document.getElementById("right-player");
+    this.showPlayers = !this.showPlayers;
   }
 
 }

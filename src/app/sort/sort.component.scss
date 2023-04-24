@@ -1,7 +1,10 @@
+@import '~bootstrap/dist/css/bootstrap.min.css';  
+
 #buttonWrapper{
     width: 100%;
     display:flex;
     justify-content: center;
+    gap: 15px;
 }
 
 #quizWrapper{
@@ -23,7 +26,6 @@
     overflow: wrap;
     letter-spacing: 2px;
     padding: 8px;
-    margin: 0px 20px;
     font-family: "Goudy Old Style", Garamond, "Big Caslon", "Times New Roman", serif;
 
     &:hover{
@@ -65,11 +67,27 @@
 
 }
 
-#playerWrapper{
+#playerWrapper, .resultWrapper{
     display: flex;
     justify-content: space-around;
     width: 100%;
 }
 iframe{
-    margin: 70px;
+    margin: auto;
+}
+
+#resultField{
+    margin: 30px 10px;
+}
+
+#togglePlayers {
+    padding: 10px;
+    background-color: #CB997E;
+    border: 2px solid #75523f;
+    margin: 20px 0px;
+    border-radius: 10px;
+
+    &:hover{
+        background-color: #DDBEA9;
+    }
 }
