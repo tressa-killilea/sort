@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'playlist-form',
@@ -11,8 +10,8 @@ export class PlaylistFormComponent {
 
   @Output() playlistID = new EventEmitter<string>;
   choseOther:boolean= false;
-  //taylorPlaylistID: string = "5IZAevyO1lpExvoXitoZmU";
-  taylorPlaylistID: string = "5cMvfdMeKXvCR40jP3mU9e";
+  taylorPlaylistID : string = "5IZAevyO1lpExvoXitoZmU";
+  // test taylorPlaylistID: string = "5cMvfdMeKXvCR40jP3mU9e";
   playlistIDstr: string = '';
   playlistLink: string = '';
   hasError: boolean = false;

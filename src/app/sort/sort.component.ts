@@ -1,11 +1,8 @@
 import { AfterViewInit, Component, Injectable, Input } from '@angular/core';
-import Chart, { ChartItem, Colors } from 'chart.js/auto';
-import { HttpClientModule, HttpHeaders } from '@angular/common/http';
+import Chart, { ChartItem } from 'chart.js/auto';
 import {GetToken} from '../services/getToken.service';
 import { Songs } from '../services/songs.service';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { Location } from '@angular/common';
-import { NgxSpinnerService } from "ngx-spinner";  
 
 type SongObj = {
   title: string;
@@ -344,6 +341,8 @@ export class SortComponent implements AfterViewInit{
 
     if(battleEl) battleEl.innerHTML = str0;
     const leftEl = document.getElementById("leftField");
+    const rightEl = document.getElementById("rightField");
+
     this.leftSongId = this.getEmbedSrc(obj1.id);
     this.rightSongId = this.getEmbedSrc(obj2.id);
 
@@ -353,11 +352,11 @@ export class SortComponent implements AfterViewInit{
         leftEl.style.fontSize = "20px";
       } else leftEl.style.fontSize = "25px";
     }
-    const rightEl = document.getElementById("rightField");
+    
     if(rightEl) {
       rightEl.innerHTML = str2;
       if(str2.length > 25){
-        rightEl.style.fontSize = "20px;"
+        rightEl.style.fontSize = "20px";
       } else rightEl.style.fontSize = "25px;"
     }
     this.numQuestion ++;
