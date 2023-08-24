@@ -61,13 +61,11 @@ export class SortComponent implements AfterViewInit{
   token:any = {};
   playlist:any = {};
   routeState:any = {};
-  isTSplaylist: boolean = true;
 
   toggleBtnTxt = "Hide Music Players";
   showPlayers = true;
 
   ngAfterViewInit(){
-   // this.showImage();
   }
 
   ngOnInit() {
@@ -80,13 +78,8 @@ export class SortComponent implements AfterViewInit{
     private location: Location){
 
     this.getTokenService();
-
-    this.isTSplaylist = this.playlistId === "5IZAevyO1lpExvoXitoZmU";
   }
 
-  // async getTokenService(){
-  //   await this.getToken.sendPostRequest().subscribe((token: object) => (this.token = token));
-  // }
   getTokenService(){
       this.getToken.sendPostRequest().subscribe((token: any) => {
         this.token = token;
@@ -110,51 +103,14 @@ export class SortComponent implements AfterViewInit{
     });
   }
 
-  cleanAlbumTitleTS(t: string){
-    var title = "";
-    if(t == "Taylor Swift") {
-      title = "Debut"
-    }
-    else if(t.includes("Fearless")) {
-      title = "Fearless";
-    }
-    else if(t.includes("Speak Now")) {
-      title = "Speak Now";
-    }
-    else if(t.includes("Red")) {
-      title = "Red";
-    }
-    else if(t.includes("1989")) {
-      title = "1989";
-    }
-    else if(t.includes("reputation")) {
-      title = "reputation";
-    }
-    else if(t.includes("Lover")) {
-      title = "Lover";
-    }
-    else if(t.includes("folklore")) {
-      title = "folklore";
-    }
-    else if(t.includes("evermore")) {
-      title = "evermore";
-    }
-    else if(t.includes("Midnights")) {
-      title = "Midnights";
-    }
-    else {
-      title = "Other"
-    }
-    return title;
-  }
+  
 
   getData(){
     var temp:SongObj[] = [];
     var tempObj:SongObj = {title: "", album: "", id: ""};
     for(var i=0; i<this.playlist.body.items.length; i++){
       tempObj.title= this.playlist.body.items[i].track.name;
-      if(this.isTSplaylist) tempObj.album= this.cleanAlbumTitleTS(this.playlist.body.items[i].track.album.name);
-      else tempObj.album=this.playlist.body.items[i].track.album.name;
+      tempObj.album=this.playlist.body.items[i].track.album.name;
       tempObj.id= this.playlist.body.items[i].track.id;
 
       temp.push(tempObj);
@@ -393,7 +349,6 @@ export class SortComponent implements AfterViewInit{
     }
     str += "<\/table>";
     if(resultEl) resultEl.innerHTML = str;
-    if(this.isTSplaylist) this.showAlbumResult();
   }
 
   findAlbumIndex(albumTitle: string, albums: AlbumObj[]){
@@ -417,117 +372,7 @@ export class SortComponent implements AfterViewInit{
     return albumList;
   }
 
-  showAlbumResult(){
-    var list = this.lstMember[0];
-    var albumTitles = this.getAlbumList();
-    var albumsObj:AlbumObj[] = [];
-    var tempSongObj;
-    var tempIndex;
-    var str = "";
-    var totalPoints = (list.length - 1) * list.length / 2;
-    var chartColors:string[] = [];
-    var chartPoints:number[] = [];
-
-    // Instatiate albumsObj
-    for(var i=0; i < albumTitles.length; i++){
-      albumsObj[i] = {
-        title: albumTitles[i],
-        points: 0,  
-        trackTotal: 0
-      }
-    }
-   // 
-    for(var j=0; j < list.length; j++){
-      tempSongObj = this.getSongObj(list[j]);
-      tempIndex = this.findAlbumIndex(tempSongObj.album, albumsObj);
-      albumsObj[tempIndex].points += j;
-      albumsObj[tempIndex].trackTotal++;
-    }
-
-    albumsObj.forEach((album)=>{
-      var t = album.title;
-      if(t == "Debut") {
-        chartColors.push("#8ac6eb");
-      }
-      else if(t.includes("Fearless")) {
-        chartColors.push("#9c643d");
-      }
-      else if(t.includes("Speak Now")) {
-        chartColors.push("#712485");
-      }
-      else if(t.includes("Red")) {
-        chartColors.push("#c71625");
-      }
-      else if(t.includes("1989")) {
-        chartColors.push("#537aad");
-      }
-      else if(t.includes("reputation")) {
-        chartColors.push("#000");
-      }
-      else if(t.includes("Lover")) {
-        chartColors.push("#e67ec8");
-      }
-      else if(t.includes("folklore")) {
-        chartColors.push("#827f81");
-      }
-      else if(t.includes("evermore")) {
-        chartColors.push("#57091d");
-      }
-      else if(t.includes("Midnights")) {
-        chartColors.push("#28285e");
-      }
-      else {
-        chartColors.push("#a3972a");
-      }
-    });
-
-    for(var i=0; i < albumsObj.length; i++){
-      var points = (totalPoints - albumsObj[i].points) * (albumsObj[i].trackTotal / list.length);
-      chartPoints.push(points);
-    }
-
-    var chart = document.getElementById("albumChart") as ChartItem;
-    var albumChart = new Chart(chart, {
-      type: 'bar',
-      data:{
-        labels: albumTitles,
-        datasets: [{
-          label: '',
-          data: chartPoints,
-          backgroundColor: chartColors,
-          maxBarThickness: 20,
-        }]
-      },
-      options: {
-        indexAxis: "y",
-        scales: {
-          x: {
-            grid: {
-              display: false
-            },
-            ticks: {
-              display: false
-            },
-            
-          },
-          y: {
-            grid: {
-              display: false
-            }
-          }
-        },
-        plugins: {
-          legend: {
-            display: false
-          }
-        }
-      }
-    });
-  }
-
   toggleMusicPlayers(){
-    // const leftPlayer = document.getElementById("left-player");
-    // const rightPlayer = document.getElementById("right-player");
     this.showPlayers = !this.showPlayers;
   }
 
