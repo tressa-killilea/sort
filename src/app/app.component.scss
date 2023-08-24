@@ -1,13 +1,23 @@
 .intro{
-    font-size: 20px;
-    color: #6B705C;
+    font-size: 16px;
+    
     display: flex;
     justify-content: center;
-    margin: 20px;
+    margin: 30px 20px;
+    width: 40%;
 }
 
-p{
-    width: 750px;
+
+.header {
+    padding: 20px;
     text-align: center;
+    background: #daebf5;
+    color: #0c2431;
+    font-size: 30px;
+    border-bottom: solid 3px #0c2431;
+    font-family: "Goudy Old Style", Garamond, "Big Caslon", "Times New Roman", serif;
 }
 
+.content{
+    display: flex;
+}

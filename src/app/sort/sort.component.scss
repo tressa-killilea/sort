@@ -19,8 +19,8 @@
     width: 200px;
     height: 200px;
     font-size: 25px;
-    color: white;
-    background-color: hsl(75, 10%, 40%);
+    color: #0c2431;
+    background-color: white;
     border-radius: 10px;
     text-align: center;
     overflow: wrap;
@@ -29,8 +29,8 @@
     font-family: "Goudy Old Style", Garamond, "Big Caslon", "Times New Roman", serif;
 
     &:hover{
-        background-color: #B7B7A4;
-        border-color: #6B705C;
+        background-color: #daebf5;
+        border-color: black;
     }
 }
 
@@ -43,13 +43,13 @@
 
 
 ::ng-deep .progress {
-    background-color: #FFE8D6 !important;
+    background-color: white !important;
     width: 500px !important;
     border: 1px #6B705C solid;
     color: blue !important;
 }
 ::ng-deep .progress-bar {
-    background-color: #CB997E !important;
+    background-color: #0c2431 !important;
 }
 
 #progressTracker{
@@ -82,12 +82,12 @@ iframe{
 
 #togglePlayers {
     padding: 10px;
-    background-color: #CB997E;
-    border: 2px solid #75523f;
+    background-color: #0c2431;
     margin: 20px 0px;
     border-radius: 10px;
+    color: white;
 
     &:hover{
-        background-color: #DDBEA9;
+        background-color: #335263;
     }
 }

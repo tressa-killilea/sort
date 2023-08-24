@@ -1,5 +1,12 @@
-<div class="intro">
-    <p>Welcome to my song ranker! Once you are on the ranking page, be sure that you don't go back or refresh the page. <strong>You will lose all your progress.</strong> Choose your favorite of the two songs displayed and try not to choose the neutral option too often, or your ranking won't be as accurate. Happy ranking!</p>
+<div class="header">
+    <h1>Song Sort</h1>
 </div>
-<playlist-form (playlistID)="getPlaylistId($event)"></playlist-form>
-<router-outlet></router-outlet>
+
+<div class="content">
+    <div class="intro">
+        <p>Welcome to my song ranker! Once you are on the ranking page, be sure that you don't go back or refresh the page. <strong>You will lose all your progress.</strong> Choose your favorite of the two songs displayed and try not to choose the neutral option too often, or your ranking won't be as accurate. Happy ranking!</p>
+    </div>
+    <playlist-form (playlistID)="getPlaylistId($event)"></playlist-form>
+    <router-outlet></router-outlet>
+</div>
+
