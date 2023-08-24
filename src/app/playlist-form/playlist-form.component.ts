@@ -9,25 +9,11 @@ import { Router } from '@angular/router';
 export class PlaylistFormComponent {
 
   @Output() playlistID = new EventEmitter<string>;
-  choseOther:boolean= false;
-  taylorPlaylistID : string = "5IZAevyO1lpExvoXitoZmU";
-  // test taylorPlaylistID: string = "5cMvfdMeKXvCR40jP3mU9e";
   playlistIDstr: string = '';
   playlistLink: string = '';
   hasError: boolean = false;
 
   constructor(private router: Router){}
-
-  clickTaylor(){
-    this.playlistIDstr = this.taylorPlaylistID;
-    const wrapper = document.getElementById('form-wrapper');
-    if(wrapper) wrapper.setAttribute('hidden', '');
-    this.router.navigateByUrl('/sort', {state: {id: this.taylorPlaylistID}});
-  }
-
-  clickOther(){
-    this.choseOther = true;
-  }
 
   clickStart(){
     if(!this.playlistLink.includes("https://open.spotify.com/playlist/")) this.hasError = true;
