@@ -1,4 +1,12 @@
 
+<div class="playlistHeader">
+    <div class="playlistText">
+        <h1 class="playlistName">{{playlistInfo.name}}</h1>
+        <p class="ownerName">Created by <b>{{playlistInfo.owner}}</b> on Spotify</p>
+    </div>
+    <img class="playlistImg" [src]='playlistInfo.image'>
+</div>
+
 <div *ngIf="finishFlag != 1" id="quizWrapper">
     <p id="battleNumber"></p>
 
