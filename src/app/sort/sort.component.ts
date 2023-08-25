@@ -304,7 +304,7 @@ export class SortComponent implements AfterViewInit{
   }
 
   getEmbedSrc(id: string) {
-    return "https://open.spotify.com/embed/track/"+id+"?utm_source=generator";
+    return "https://open.spotify.com/embed/track/"+id+"?utm_source=generator&theme=0";
   }
 
   showImage(){
