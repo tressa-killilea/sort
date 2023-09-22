@@ -2,13 +2,7 @@ import { AfterViewInit, Component, Injectable, Input } from '@angular/core';
 import { GetToken } from '../services/getToken.service';
 import { Songs } from '../services/songs.service';
 import { Location } from '@angular/common';
-
-type SongObj = {
-  title: string;
-  album: string;
-  id: string;
-  artists: string[];
-};
+import { Sort } from '../services/sort.service';
 
 type PlaylistObj = {
   name: string;
@@ -16,51 +10,28 @@ type PlaylistObj = {
   image: string;
 };
 
-type AlbumObj = {
-  title: string;
-  points: number;
-  trackTotal: number;
-};
-
 @Component({
   selector: 'app-sort',
   templateUrl: './sort.component.html',
   styleUrls: ['./sort.component.scss'],
-  providers: [GetToken, Songs],
+  providers: [GetToken, Songs, Sort],
 })
 export class SortComponent implements AfterViewInit {
   @Input() listType: string = 'song';
   @Input() playlistId: string = '';
-  dataList: SongObj[] = [];
+
   playlistInfo: PlaylistObj = {
     name: '',
     owner: '',
     image: '',
   };
 
-  lstMember: number[][] = [];
-  parent: number[] = [];
-  equal: number[] = [];
-  rec: number[] = [];
-
-  cmp1 = 0;
-  cmp2 = 0;
-  head1 = 0;
-  head2 = 0;
-  nrec = 0;
-  progress = 0;
-
   numQuestion = 1;
-  totalSize = 0;
-  finishSize = 0;
   finishFlag = 0;
+  progress = 0;
 
   leftSongId = '';
   rightSongId = '';
-
-  albumAry: AlbumObj[] = [];
-
-  tempObj: object[] = [];
 
   token: any = {};
   playlist: any = {};
@@ -79,7 +50,8 @@ export class SortComponent implements AfterViewInit {
   constructor(
     private getToken: GetToken,
     private songService: Songs,
-    private location: Location
+    private location: Location,
+    private sortService: Sort
   ) {
     this.getTokenService();
   }
@@ -92,17 +64,16 @@ export class SortComponent implements AfterViewInit {
   }
 
   getPlaylistService(url: string = '', playlistId: string) {
-    var temp: SongObj[] = [];
     this.songService
       .getPlaylist(this.token.access_token, url, playlistId)
       .subscribe((playlist: any) => {
         this.playlist = playlist;
-        this.getData();
+        this.sortService.getData(playlist);
 
         if (playlist.body.next != null) {
           this.getPlaylistService(playlist.body.next, playlistId);
         } else {
-          this.initList();
+          this.sortService.initList();
           this.showImage();
         }
       });
@@ -116,182 +87,10 @@ export class SortComponent implements AfterViewInit {
       });
   }
 
-  getData() {
-    var temp: SongObj[] = [];
-    var tempObj: SongObj = { title: '', album: '', id: '', artists: [] };
-    const tracks = this.playlist.body.tracks;
-    for (var i = 0; i < tracks.items.length; i++) {
-      tempObj.title = tracks.items[i].track.name;
-      tempObj.album = tracks.items[i].track.album.name;
-      tempObj.id = tracks.items[i].track.id;
-      const artists = tracks.items[i].track.artists;
-      for (const artist of artists) {
-        tempObj.artists.push(artist.name);
-      }
-
-      temp.push(tempObj);
-      tempObj = { title: '', album: '', id: '', artists: [] };
-    }
-    this.dataList.push(...temp);
-  }
-
-  initList() {
-    var n = 0;
-    var mid = 0;
-    var i = 0;
-    this.lstMember[n] = [];
-    for (i = 0; i < this.dataList.length; i++) {
-      this.lstMember[n][i] = i;
-    }
-
-    this.parent[n] = -1;
-    this.totalSize = 0;
-    n++;
-
-    for (i = 0; i < this.lstMember.length; i++) {
-      if (this.lstMember[i].length >= 2) {
-        mid = Math.ceil(this.lstMember[i].length / 2);
-        this.lstMember[n] = new Array();
-        this.lstMember[n] = this.lstMember[i].slice(0, mid);
-        this.totalSize += this.lstMember[n].length;
-        this.parent[n] = i;
-        n++;
-        this.lstMember[n] = new Array();
-        this.lstMember[n] = this.lstMember[i].slice(
-          mid,
-          this.lstMember[i].length
-        );
-        this.totalSize += this.lstMember[n].length;
-        this.parent[n] = i;
-        n++;
-      }
-    }
-
-    for (i = 0; i < this.dataList.length; i++) {
-      this.rec[i] = 0;
-    }
-
-    this.nrec = 0;
-
-    for (i = 0; i <= this.dataList.length; i++) {
-      this.equal[i] = -1;
-    }
-
-    this.cmp1 = this.lstMember.length - 2;
-    this.cmp2 = this.lstMember.length - 1;
-  }
-
-  sortList(flag: number) {
-    var i = 0;
+  onClick(flag: number) {
     var str = '';
-
-    // Choose left song
-    if (flag < 0) {
-      this.rec[this.nrec] = this.lstMember[this.cmp1][this.head1];
-      this.head1++;
-      this.nrec++;
-      this.finishSize++;
-
-      while (this.equal[this.rec[this.nrec - 1]] != -1) {
-        this.rec[this.nrec] = this.lstMember[this.cmp1][this.head1];
-        this.head1++;
-        this.nrec++;
-        this.finishSize++;
-      }
-      // Choose right song
-    } else if (flag > 0) {
-      this.rec[this.nrec] = this.lstMember[this.cmp2][this.head2];
-      this.head2++;
-      this.nrec++;
-      this.finishSize++;
-
-      while (this.equal[this.rec[this.nrec - 1]] != -1) {
-        this.rec[this.nrec] = this.lstMember[this.cmp2][this.head2];
-        this.head2++;
-        this.nrec++;
-        this.finishSize++;
-      }
-      // Choose neutral option
-    } else {
-      this.rec[this.nrec] = this.lstMember[this.cmp1][this.head1];
-      this.head1++;
-      this.nrec++;
-      this.finishSize++;
-
-      while (this.equal[this.rec[this.nrec - 1]] != -1) {
-        this.rec[this.nrec] = this.lstMember[this.cmp1][this.head1];
-        this.head1++;
-        this.nrec++;
-        this.finishSize++;
-      }
-
-      this.rec[this.nrec] = this.lstMember[this.cmp2][this.head2];
-      this.head2++;
-      this.nrec++;
-      this.finishSize++;
-
-      while (this.equal[this.rec[this.nrec - 1]] != -1) {
-        this.rec[this.nrec] = this.lstMember[this.cmp2][this.head2];
-        this.head2++;
-        this.nrec++;
-        this.finishSize++;
-      }
-    }
-
-    // If second list is done
-    if (
-      this.head1 < this.lstMember[this.cmp1].length &&
-      this.head2 == this.lstMember[this.cmp2].length
-    ) {
-      while (this.head1 < this.lstMember[this.cmp1].length) {
-        this.rec[this.nrec] = this.lstMember[this.cmp1][this.head1];
-        this.head1++;
-        this.nrec++;
-        this.finishSize++;
-      }
-      //If first list is done
-    } else if (
-      this.head1 == this.lstMember[this.cmp1].length &&
-      this.head2 < this.lstMember[this.cmp2].length
-    ) {
-      while (this.head2 < this.lstMember[this.cmp2].length) {
-        this.rec[this.nrec] = this.lstMember[this.cmp2][this.head2];
-        this.head2++;
-        this.nrec++;
-        this.finishSize++;
-      }
-    }
-
-    //If both lists are done
-    if (
-      this.head1 == this.lstMember[this.cmp1].length &&
-      this.head2 == this.lstMember[this.cmp2].length
-    ) {
-      for (
-        i = 0;
-        i < this.lstMember[this.cmp1].length + this.lstMember[this.cmp2].length;
-        i++
-      ) {
-        this.lstMember[this.parent[this.cmp1]][i] = this.rec[i];
-      }
-
-      this.lstMember.pop();
-      this.lstMember.pop();
-      this.cmp1 = this.cmp1 - 2;
-      this.cmp2 = this.cmp2 - 2;
-      this.head1 = 0;
-      this.head2 = 0;
-
-      //Initialize the rec before performing the new comparison
-      if (this.head1 == 0 && this.head2 == 0) {
-        for (i = 0; i < this.dataList.length; i++) {
-          this.rec[i] = 0;
-        }
-        this.nrec = 0;
-      }
-    }
-
-    if (this.cmp1 < 0) {
+    const isDone = this.sortService.sortList(flag);
+    if (isDone) {
       str = 'Battle #' + (this.numQuestion - 1);
       const el = document.getElementById('battleNumber');
       if (el != null) el.innerHTML = str;
@@ -327,8 +126,8 @@ export class SortComponent implements AfterViewInit {
   }
 
   showImage() {
-    const obj1 = this.getSongObj(this.lstMember[this.cmp1][this.head1]);
-    const obj2 = this.getSongObj(this.lstMember[this.cmp2][this.head2]);
+    const obj1 = this.sortService.getLeftObject();
+    const obj2 = this.sortService.getRightObject();
 
     var str0 = 'Battle #' + (this.numQuestion - 1);
     var str1 = obj1.title;
@@ -337,7 +136,7 @@ export class SortComponent implements AfterViewInit {
     var leftHtml = `<h1 class='song-title'>${str1}</h1><p class='artists'>${obj1.artists[0]}</p>`;
     var rightHtml = `<h1 class='song-title'>${str2}</h1><p class='artists'>${obj2.artists[0]}</p>`;
 
-    this.progress = Math.floor((this.finishSize * 100) / this.totalSize);
+    this.progress = this.sortService.getProgress();
     const battleEl = document.getElementById('battleNumber');
 
     if (battleEl) battleEl.innerHTML = str0;
@@ -363,14 +162,6 @@ export class SortComponent implements AfterViewInit {
     this.numQuestion++;
   }
 
-  getSongName(n: number) {
-    return this.dataList[n].title;
-  }
-
-  getSongObj(n: number) {
-    return this.dataList[n];
-  }
-
   showResult() {
     var ranking = 1;
     var sameRank = 1;
@@ -381,17 +172,20 @@ export class SortComponent implements AfterViewInit {
     str +=
       '<table style="width:350px; font-size:18px; line-height:120%; margin-left:auto; margin-right:auto; border:1px solid #000; border-collapse:collapse" align="center">';
     str +=
-      '<tr><td style="color:#ffffff; background-color:#6B705C; font-family: Goudy Old Style ;text-align:center;">Rank</td><td style="color:#ffffff; background-color:#000; background-color:#6B705C; font-family: Goudy Old Style; text-align:center;">Song</td></tr>';
+      '<tr><td style="color:#000; background-color:#daebf5; font-family: Goudy Old Style ;text-align:center;">Rank</td><td style="color:#000; background-color:#daebf5; font-family: Goudy Old Style; text-align:center;">Song</td></tr>';
 
-    for (i = 0; i < this.dataList.length; i++) {
+    for (i = 0; i < this.sortService.dataList.length; i++) {
       str +=
         '<tr><td style="border:1px solid #000; text-align:center; padding-right:5px;">' +
         ranking +
         '</td><td style="border:1px solid #000; padding-left:5px;">' +
-        this.dataList[this.lstMember[0][i]].title +
+        this.sortService.getSong(0, i).title +
         '</td></tr>';
-      if (i < this.dataList.length - 1) {
-        if (this.equal[this.lstMember[0][i]] == this.lstMember[0][i + 1]) {
+      if (i < this.sortService.getSongListLength() - 1) {
+        if (
+          this.sortService.equal[this.sortService.lstMember[0][i]] ==
+          this.sortService.lstMember[0][i + 1]
+        ) {
           sameRank++;
         } else {
           ranking += sameRank;
@@ -401,27 +195,6 @@ export class SortComponent implements AfterViewInit {
     }
     str += '</table>';
     if (resultEl) resultEl.innerHTML = str;
-  }
-
-  findAlbumIndex(albumTitle: string, albums: AlbumObj[]) {
-    for (var i = 0; i < albums.length; i++) {
-      if (albumTitle == albums[i].title) return i;
-    }
-    return -1;
-  }
-
-  getAlbumList() {
-    var albumList: string[] = [];
-    var isFound = false;
-
-    for (var i = 0; i < this.dataList.length; i++) {
-      for (var j = 0; j < albumList.length; j++) {
-        if (this.dataList[i].album === albumList[j]) isFound = true;
-      }
-      if (!isFound) albumList.push(this.dataList[i].album);
-      isFound = false;
-    }
-    return albumList;
   }
 
   toggleMusicPlayers() {
