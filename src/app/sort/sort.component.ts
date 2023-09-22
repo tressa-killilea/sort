@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, Injectable, Input } from '@angular/core';
-import Chart, { ChartItem } from 'chart.js/auto';
 import { GetToken } from '../services/getToken.service';
 import { Songs } from '../services/songs.service';
 import { Location } from '@angular/common';
@@ -127,7 +126,6 @@ export class SortComponent implements AfterViewInit {
   getData() {
     var temp: SongObj[] = [];
     var tempObj: SongObj = { title: '', album: '', id: '', artists: [] };
-    //    console.log('TEST: ' + JSON.stringify(this.playlist.body.items));
     const tracks = this.playlist.body.tracks;
     for (var i = 0; i < tracks.items.length; i++) {
       tempObj.title = tracks.items[i].track.name;
