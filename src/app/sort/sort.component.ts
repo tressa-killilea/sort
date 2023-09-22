@@ -22,13 +22,6 @@ type AlbumObj = {
   trackTotal: number;
 };
 
-type GraphModel = {
-  value: number;
-  color: string;
-  size: string;
-  legend: string;
-};
-
 @Component({
   selector: 'app-sort',
   templateUrl: './sort.component.html',
@@ -309,18 +302,28 @@ export class SortComponent implements AfterViewInit {
     }
   }
 
-  fitFont() {
-    var leftField = document.getElementById('leftField');
-    var neutralField = document.getElementById('neutralField');
-    var rightField = document.getElementById('rightField');
-  }
-
   getEmbedSrc(id: string) {
     return (
       'https://open.spotify.com/embed/track/' +
       id +
       '?utm_source=generator&theme=0'
     );
+  }
+
+  formatText(
+    songTitle: string,
+    songHtml: HTMLElement,
+    artistHtml: HTMLElement
+  ) {
+    if (songTitle.length > 25) {
+      songHtml.style.fontSize = '20px';
+    } else {
+      songHtml.style.fontSize = '25px';
+    }
+    songHtml.style.marginTop = 'auto';
+    songHtml.style.marginBottom = '35px';
+
+    artistHtml.style.fontSize = '15px';
   }
 
   showImage() {
@@ -348,30 +351,14 @@ export class SortComponent implements AfterViewInit {
       leftEl.innerHTML = leftHtml;
       const songName = leftEl.children[0] as HTMLElement;
       const artist = leftEl.children[1] as HTMLElement;
-      if (str1.length > 25) {
-        songName.style.fontSize = '20px';
-        songName.style.marginTop = '30%';
-      } else {
-        songName.style.fontSize = '25px';
-        songName.style.marginTop = '40%';
-      }
-      artist.style.fontSize = '15px';
-      artist.style.marginTop = 'auto';
+      this.formatText(str1, songName, artist);
     }
 
     if (rightEl) {
       rightEl.innerHTML = rightHtml;
       const songName = rightEl.children[0] as HTMLElement;
       const artist = rightEl.children[1] as HTMLElement;
-      if (str2.length > 25) {
-        songName.style.fontSize = '20px';
-        songName.style.marginTop = '30%';
-      } else {
-        songName.style.marginTop = '40%';
-        songName.style.fontSize = '25px';
-      }
-      artist.style.marginTop = 'auto';
-      artist.style.fontSize = '15px';
+      this.formatText(str2, songName, artist);
     }
     this.numQuestion++;
   }
