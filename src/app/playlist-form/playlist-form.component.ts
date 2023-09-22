@@ -11,12 +11,12 @@ export class PlaylistFormComponent {
   playlistIDstr: string = '';
   playlistLink: string = '';
   hasError: boolean = false;
+  regex: any = /https:\/\/open\.spotify\.com\/playlist\/.*\?si=.*/gm;
 
   constructor(private router: Router) {}
 
   clickStart() {
-    if (!this.playlistLink.includes('https://open.spotify.com/playlist/'))
-      this.hasError = true;
+    if (!this.regex.test(this.playlistLink)) this.hasError = true;
     else this.hasError = false;
 
     if (!this.hasError) {
