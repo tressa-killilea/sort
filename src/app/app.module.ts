@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms'; 
+import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
 import { SortComponent } from './sort/sort.component';
@@ -10,14 +10,16 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SafePipe } from './safe.pipe';
-import { NgxSpinnerModule } from "ngx-spinner";  
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { TooltipComponent } from './tooltip/tooltip.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SortComponent,
     SafePipe,
-    PlaylistFormComponent
+    PlaylistFormComponent,
+    TooltipComponent,
   ],
   imports: [
     BrowserModule,
@@ -25,9 +27,9 @@ import { NgxSpinnerModule } from "ngx-spinner";
     NgbModule,
     HttpClientModule,
     FormsModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

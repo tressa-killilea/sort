@@ -1,15 +1,38 @@
 <div id="form-wrapper">
+  <div class="helperContent">
+    <p class="helperText">
+      Enter the Spotify URL to the playlist you want to rank
+    </p>
+    <app-tooltip>
+      <p>To get the link to a Spotify playlist, follow these steps:</p>
+      <ol>
+        <li>Navigate to the playlist page on the Spotify app.</li>
+        <li>
+          Click the "..." located to the left on the screen, in line with the
+          play button. This will open a menu.
+        </li>
+        <li>From this menu, select "Share" to open a sub-menu.</li>
+        <li>
+          Click "Copy link to playlist." This will copy a link to the playlist
+          that you will paste into the text box below.
+        </li>
+      </ol>
+    </app-tooltip>
+  </div>
+  <div class="centerChildren">
+    <form (submit)="clickStart()">
+      <input
+        type="text"
+        id="playlistLink"
+        class="playlistIdInput"
+        [(ngModel)]="playlistLink"
+        [ngModelOptions]="{ standalone: true }"
+      />
+      <button class="btn" (click)="clickStart()">Start Sorting</button>
+    </form>
+  </div>
 
-    <p class="text">Enter the Spotify URL to the playlist you want to rank</p>
-        <div class="centerChildren">
-           <form (submit)="clickStart()">
-                <input type="text" id="playlistLink" class="playlistIdInput" [(ngModel)]="playlistLink" [ngModelOptions]="{standalone: true}">
-                <button class="btn" (click)="clickStart()">Start Sorting</button>
-           </form>
-        </div>
-    
-        <div *ngIf="hasError" class="error">
-            <p class="text errorText">Oh no! Your URL is not valid. See the URL below as a valid example of a Spotify playlist URL.</p>
-            <p>https://open.spotify.com/playlist/6Wn5IdrI8VcwOhknR7hBkS</p>
-        </div>
+  <div *ngIf="hasError" class="error">
+    <p class="text errorText">Oh no! Your URL is not valid.</p>
+  </div>
 </div>

@@ -1,43 +1,46 @@
 .btn {
-    width: 150px;
-    padding: 10px 0px;
-    background-color: #0c2431;
-   // border: 2px solid #75523f;
-    margin: 0px 20px;
-    color: white;
+  width: 150px;
+  padding: 10px 0px;
+  background-color: #0c2431;
+  // border: 2px solid #75523f;
+  margin: 0px 20px;
+  color: white;
 
-    &:hover{
-        background-color: #335263;
-    }
+  &:hover {
+    background-color: #335263;
+  }
 }
-.centerChildren{
-    display: flex;
-    justify-content: center;
-}
-
-.text {
-    font-family: "Goudy Old Style", Garamond, "Big Caslon", "Times New Roman", serif;
-    font-size: 30px;
-    margin: 30px;
-    color: #0c2431;
-    display: flex;
-    justify-content: center;
+.centerChildren {
+  display: flex;
+  justify-content: center;
 }
 
-input[type=text]{
-    padding: 10px;
-    border: 2px solid #0c2431; 
-    background-color: #daebf5;
-    border-radius: 10px;
-    width: 400px;
+.helperText {
+  font-family: "Goudy Old Style", Garamond, "Big Caslon", "Times New Roman",
+    serif;
+  font-size: 30px;
+  margin: 30px;
+  color: #0c2431;
+}
+.helperContent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.errorText{
-    font-size: 20px;
-    color: red;
+input[type="text"] {
+  padding: 10px;
+  border: 2px solid #0c2431;
+  background-color: #daebf5;
+  border-radius: 10px;
+  width: 400px;
 }
-.error{
-    display:flex;
-    align-items: center;
-    flex-direction: column;
+
+.errorText {
+  font-size: 20px;
+  color: red;
+}
+.error {
+  display: flex;
+  align-items: center;
 }
