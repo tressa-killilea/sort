@@ -1,93 +1,115 @@
-@import '~bootstrap/dist/css/bootstrap.min.css';  
+@import "~bootstrap/dist/css/bootstrap.min.css";
 
-#buttonWrapper{
-    width: 100%;
-    display:flex;
-    justify-content: center;
-    gap: 15px;
+#buttonWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
 }
 
-#quizWrapper{
-    width: 100%;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
+#quizWrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }
 
-.optionBtn{
-    min-width: 200px;
-    width: 200px;
-    height: 200px;
-    font-size: 25px;
-    color: white;
-    background-color: hsl(75, 10%, 40%);
-    border-radius: 10px;
-    text-align: center;
-    overflow: wrap;
-    letter-spacing: 2px;
-    padding: 8px;
-    font-family: "Goudy Old Style", Garamond, "Big Caslon", "Times New Roman", serif;
-
-    &:hover{
-        background-color: #B7B7A4;
-        border-color: #6B705C;
-    }
+.optionBtn {
+  min-width: 200px;
+  width: 200px;
+  height: 200px;
+  font-size: 25px;
+  color: #0c2431;
+  // background-color: white;
+  border-radius: 10px;
+  text-align: center;
+  overflow: wrap;
+  letter-spacing: 2px;
+  padding: 8px;
+  font-family: "Goudy Old Style", Garamond, "Big Caslon", "Times New Roman",
+    serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  &:hover {
+    background-color: #daebf5;
+    border-color: black;
+  }
 }
 
-#battleNumber{
-    font-size: 20px;
-    font-family: "Verdana";
-    text-align: center;
-    margin-top: 10px;
+#battleNumber {
+  font-size: 20px;
+  font-family: "Verdana";
+  text-align: center;
+  margin-top: 10px;
 }
-
 
 ::ng-deep .progress {
-    background-color: #FFE8D6 !important;
-    width: 500px !important;
-    border: 1px #6B705C solid;
-    color: blue !important;
+  background-color: white !important;
+  width: 500px !important;
+  border: 1px #6b705c solid;
+  color: blue !important;
 }
 ::ng-deep .progress-bar {
-    background-color: #CB997E !important;
+  background-color: #0c2431 !important;
 }
 
-#progressTracker{
-    display: flex;
+#progressTracker {
+  display: flex;
 }
-#progressId{
-    margin-left: 7px;
-    margin-top: -5px;
-}
-
-#chartWrapper{
-    width: 650px;
-
-    padding: 15px;
-
+#progressId {
+  margin-left: 7px;
+  margin-top: -5px;
 }
 
-#playerWrapper, .resultWrapper{
-    display: flex;
-    justify-content: space-around;
-    width: 100%;
-}
-iframe{
-    margin: auto;
+#chartWrapper {
+  width: 650px;
+
+  padding: 15px;
 }
 
-#resultField{
-    margin: 30px 10px;
+#playerWrapper,
+.resultWrapper {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+iframe {
+  margin: auto;
+}
+
+#resultField {
+  margin: 30px 10px;
 }
 
 #togglePlayers {
-    padding: 10px;
-    background-color: #CB997E;
-    border: 2px solid #75523f;
-    margin: 20px 0px;
-    border-radius: 10px;
+  padding: 10px;
+  background-color: #0c2431;
+  margin: 20px 0px;
+  border-radius: 10px;
+  color: white;
 
-    &:hover{
-        background-color: #DDBEA9;
-    }
+  &:hover {
+    background-color: #335263;
+  }
+}
+
+.playlistName {
+  font-family: "Goudy Old Style", Garamond, "Big Caslon", "Times New Roman",
+    serif;
+}
+.ownerName {
+  font-size: 15px;
+}
+.playlistImg {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-left: 30px;
+}
+.playlistHeader {
+  text-align: center;
+  display: flex;
+  justify-content: center;
 }

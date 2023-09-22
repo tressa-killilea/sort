@@ -1,12 +1,13 @@
 .btn {
     width: 150px;
     padding: 10px 0px;
-    background-color: #CB997E;
-    border: 2px solid #75523f;
+    background-color: #0c2431;
+   // border: 2px solid #75523f;
     margin: 0px 20px;
+    color: white;
 
     &:hover{
-        background-color: #DDBEA9;
+        background-color: #335263;
     }
 }
 .centerChildren{
@@ -18,15 +19,15 @@
     font-family: "Goudy Old Style", Garamond, "Big Caslon", "Times New Roman", serif;
     font-size: 30px;
     margin: 30px;
-    color: #75523f;
+    color: #0c2431;
     display: flex;
     justify-content: center;
 }
 
 input[type=text]{
     padding: 10px;
-    border: 2px solid #75523f; 
-    background-color: #faece1;
+    border: 2px solid #0c2431; 
+    background-color: #daebf5;
     border-radius: 10px;
     width: 400px;
 }
